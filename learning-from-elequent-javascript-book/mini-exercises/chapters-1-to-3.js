@@ -163,6 +163,6 @@ const countBs = (word) => {
     countChar("B", word);
 }
 
-countBs("Baaaaaaaaa");
+// countBs("Baaaaaaaaa");
 
 
