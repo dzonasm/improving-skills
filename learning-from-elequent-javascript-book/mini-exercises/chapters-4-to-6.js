@@ -208,46 +208,175 @@ const deepEqual = (a, b) => {
 let obj1 = { name: "Jonas" };
 let obj2 = { name: "Jonas" };
 
-console.log(deepEqual(obj1, obj2));
+// console.log(deepEqual(obj1, obj2));
 
 
 
 
+// Chapter 5
+
+// Flattening
+// Use the reduce method in combination with the concat method to “flatten”
+// an array of arrays into a single array that has all the elements of the original
+// arrays.
+
+const arrayToFlatten = [[1, 2], [3, 4]];
+
+const flatten = (arr) => {
+    return arr.reduce((acc, currentEl) => {
+        return acc.concat(...currentEl);
+    }, [])
+}
+
+// console.log(flatten(arrayToFlatten));
+
+
+
+// Your own loop
+// Write a higher-order function loop that provides something like a for loop
+// statement. It takes a value, a test function, an update function, and a body
+// function. Each iteration, it first runs the test function on the current loop value
+// and stops if that returns false. Then it calls the body function, giving it the
+// current value. Finally, it calls the update function to create a new value and
+// starts from the beginning.
+// When defining the function, you can use a regular loop to do the actual
+// looping.
+
+const loop = (arr, testFunc, updateFunc, bodyFunc) => {
+    for (let i = 0; i < arr.length; i++) {
+        if (!testFunc(arr[i])) return false;
+        bodyFunc(arr[i]);
+        updateFunc(arr[i]);
+    }
+}
 
 
 
 
+// Everything
+// Analogous to the some method, arrays also have an every method. This one
+// returns true when the given function returns true for every element in the array.
+// In a way, some is a version of the || operator that acts on arrays, and every is
+// like the && operator.
+// Implement every as a function that takes an array and a predicate function
+// as parameters. Write two versions, one using a loop and one using the some
+// method.
+
+const even = (number) => number % 2 === 0;
+
+const everythingArray = [4, 6, 7];
+
+const checkIfArrElementsAreEven = (arr) => {
+    if (arr.some(n => !even(n))) return false;
+    else return true;
+};
+
+// console.log(checkIfArrElementsAreEven(everythingArray));
 
 
 
+const checkIfArrElementsAreEvenWithLoop = (arr) => {
+    for (let i = 0; i < arr.length; i++) {
+        if (!even(arr[i])) return false;
+    }
+    return true;
+}
+
+// console.log(checkIfArrElementsAreEvenWithLoop(everythingArray));
 
 
 
+// Dominant writing direction
+// Write a function that computes the dominant writing direction in a string of
+// text. Remember that each script object has a direction property that can be
+// "ltr" (left to right), "rtl" (right to left), or "ttb" (top to bottom).
+// The dominant direction is the direction of a majority of the characters that
+// have a script associated with them. The characterScript and countBy functions defined earlier in the chapter are probably useful here.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function deepEqual(a, b) {
-//     if (a === b) return true;
-//     if (a == null || typeof a != "object" ||
-//         b == null || typeof b != "object") return false;
-//     let keysA = Object.keys(a), keysB = Object.keys(b);
-//     if (keysA.length != keysB.length) return false;
-//     for (let key of keysA) {
-//         if (!keysB.includes(key) || !deepEqual(a[key], b[key])) return false;
+// a scripts object
+// {
+//     name: "Coptic",
+//     ranges: [[994, 1008], [11392, 11508], [11513, 11520]],
+//     86
+//     direction: "ltr",
+//     year: -200,
+//     living: false,
+//     link: "https://en.wikipedia.org/wiki/Coptic_alphabet"
 //     }
-//     return true;
-// }
+
+
+
+/*
+thinking backwards: 
+
+my function got an input of a script and outputs an array of objects:
+answer = "lth"
+
+i found the dominant percentage
+
+i had percentages of what is the dominant direction
+
+I reduced an array that contained an object for each script, what percentage of the initial input this script was and 
+what is this scripts direction
+
+i found out how much of each script was in the input
+
+i first found out what scripts my input contained
+
+
+
+*/
+
+function countBy(items, groupName) {
+    let counts = [];
+    for (let item of items) {
+        let name = groupName(item);
+        let known = counts.findIndex(c => c.name == name);
+        if (known == -1) {
+            counts.push({ name, count: 1 });
+        } else {
+            counts[known].count++;
+        }
+    }
+    return counts;
+}
+
+
+function characterScript(code) {
+    for (let script of SCRIPTS) {
+        if (script.ranges.some(([from, to]) => {
+            return code >= from && code < to;
+        })) {
+            return script;
+        }
+    }
+    return null;
+}
+
+const findTextDirection = (text) => {
+    let scripts = (text, char => {
+        let script = characterScript(char.codePointAt(0));
+        return script ? script.direction : "none"
+    }).filter(({ direction }) => direction != "none");
+
+    let total = scripts.reduce((n, { count }) => n + count, 0);
+    if (total == 0) return "No scripts found";
+
+    return scripts.filter(script => {
+        return script.count === scripts.reduce((acc, script) => {
+            return Math.max(script.count, acc);
+        }, 0)
+    });
+}
+
+// console.log(textScripts('英国的狗说"woof", 俄罗斯的狗说"тяв"'));
+
+
+
+
+
+
+
+
