@@ -59,6 +59,17 @@ class Group {
     has(value) {
         return this.group.includes(value);
     }
+};
+
+const PowersofTwo = (num) => {
+    if (num === 2) {
+        return true;
+    } else if (num < 2) {
+        return false;
+    } else {
+        return PowersofTwo(num / 2)
+    };
 }
 
+// console.log(PowersofTwo(11));
 

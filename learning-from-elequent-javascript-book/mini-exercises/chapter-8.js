@@ -65,10 +65,10 @@ const withBoxUnlocked = (func) => {
     }
 }
 
-const leaveNote = () => {
-    console.log(box.locked)
-    box.content.push('Jonas was here!')
-}
+// const leaveNote = () => {
+//     console.log(box.locked)
+//     box.content.push('Jonas was here!')
+// }
 
 // withBoxUnlocked(leaveNote);
 // console.log(box);
